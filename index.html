@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TicTacToe Game by Maithili</title>
+</head>
+<body>
+    <h1>Tic Tac Toe Game - Single Player</h1>
+    <div class="game">
+        <div class="row">
+            <div class="cell" id="0" onclick="handleGame(this)"></div>
+            <div class="cell" id="1" onclick="handleGame(this)"></div>
+            <div class="cell" id="2" onclick="handleGame(this)"></div>
+        </div>
+        <div class="row">
+            <div class="cell" id="3" onclick="handleGame(this)"></div>
+            <div class="cell" id="4" onclick="handleGame(this)"></div>
+            <div class="cell" id="5" onclick="handleGame(this)"></div>
+        </div>
+        <div class="row">
+            <div class="cell" id="6" onclick="handleGame(this)"></div>
+            <div class="cell" id="7" onclick="handleGame(this)"></div>
+            <div class="cell" id="8" onclick="handleGame(this)"></div>
+        </div>
+    </div>
+    <h2 id="game-status"></h2>
+</body>
+<style>
+    body {
+        text-align: center;
+        font-family: Arial, sans-serif;
+    }
+
+    h1 {
+        margin-top: 50px;
+    }
+
+    .game {
+        display: flex;
+        flex-direction: column;
+        margin: 50px auto;
+        width: 300px;
+        border: 1px solid black;
+    }
+
+    .row {
+        display: flex;
+    }
+
+    .cell {
+        width: 100px;
+        height: 100px;
+        border: 1px solid black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 24px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .cell:hover {
+        background-color: #e0e0e0;
+    }
+
+    h2 {
+        margin-top: 20px;
+    }
+</style>
+<script>
+    let currentPlayer = "X";
+    let arr = Array(9).fill(null);
+    let gameOver = false; // New flag to track game state
+
+    function handleGame(el) {
+        if (gameOver) return; // Prevent further moves after game ends
+
+        const id = Number(el.id);
+
+        if (arr[id] !== null) return;
+
+        arr[id] = currentPlayer;
+        el.innerHTML = currentPlayer;
+
+        if (checkWin()) {
+            document.getElementById("game-status").innerText = `${currentPlayer} wins!`;
+            gameOver = true; // Set flag to end the game
+            setTimeout(resetGame, 2000);
+        } else if (arr.every(cell => cell !== null)) {
+            document.getElementById("game-status").innerText = "It's a draw!";
+            gameOver = true; // Set flag for game over
+            setTimeout(resetGame, 2000);
+        } else {
+            currentPlayer = currentPlayer === "X" ? "O" : "X";
+        }
+    }
+
+    function checkWin() {
+        const winningCombinations = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6]
+        ];
+
+        for (let combination of winningCombinations) {
+            const [a, b, c] = combination;
+            if (arr[a] && arr[a] === arr[b] && arr[a] === arr[c]) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function resetGame() {
+        arr = Array(9).fill(null);
+        currentPlayer = "X";
+        gameOver = false; // Reset flag to allow a new game
+        document.querySelectorAll('.cell').forEach(cell => cell.innerHTML = "");
+        document.getElementById("game-status").innerText = "";
+    }
+</script>
+</html>
